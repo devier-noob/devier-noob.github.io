@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Fund Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 20px; background: white; }
+    h2 { 
+      margin-top: 30px;
+      text-align: center;
+      color:midnightblue;
+    }
+    .hidden { 
+      display: none; 
+      
+    }
+    .card{ 
+      background: beige; 
+      padding: 30px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 1000px black;
+      margin-bottom: 20px; 
+      
+    }
+    input, select, button, textarea {
+      padding: 8px; margin: 5px 0; width: 100%;
+      box-sizing: border-box; border-radius: 5px; border: 2px solid darkblue;
+      background-color: beige;
+    }
+    button { 
+      background-color: dodgerblue; 
+      color: white; 
+      border: 2px solid black; 
+      cursor: pointer; 
+      box-shadow: 0 0 5px black;
+      
+    }
+    button:hover { 
+      background-color: black;
+      animation-duration: 2s;
+      
+      }
+    .btn-small { width: auto; margin-right: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+    .flex { display: flex; gap: 10px; }
+
+    /* Scrollable Sections */
+    .scrollable {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      padding: 5px;
+      margin-top: 10px;
+    }
+    .scrollable-table {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    h1{
+      text-align: center;
+      color: midnightblue;
+    }
+    .admin{
+     margin:0% 5%;
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div class="admin">
+  <div id="loginPage" class="card">
+    <h1>Class Fund: IT41-A</h1>
+    <h2>Admin Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">LOGIN</button>
+
+  </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="mainApp" class="hidden">
+    <h3>Class Fund Tracker</h3>
+
+    <div class="card">
+      <h3>Add Student</h3>
+      <input type="text" id="surnameInput" placeholder="Enter Surname">
+      <button onclick="addStudent()">Add Surname</button>
+    </div>
+
+    <div class="card">
+      <h3>Deposit</h3>
+      <select id="selectStudent"></select>
+      <div class="flex">
+        <button class="btn-small" onclick="setAmount(10)">+10</button>
+        <button class="btn-small" onclick="setAmount(20)">+20</button>
+        <button class="btn-small" onclick="setAmount(50)">+50</button>
+        <button class="btn-small" onclick="setAmount(100)">+100</button>
+      </div>
+      <input type="number" id="depositAmount" placeholder="Or custom amount">
+      <button onclick="deposit()">Deposit</button>
+    </div>
+
+    <div class="card">
+      <h3>Withdraw - Student</h3>
+      <select id="withdrawStudent"></select>
+      <input type="number" id="withdrawAmount" placeholder="Amount">
+      <input type="text" id="withdrawPurpose" placeholder="Purpose">
+      <input type="password" id="withdrawPass" placeholder="Admin Password">
+      <button onclick="studentWithdraw()">Withdraw</button>
+    </div>
+
+    <div class="card">
+      <h3>Withdraw - Admin</h3>
+      <input type="number" id="adminWithdrawAmount" placeholder="Amount">
+      <input type="text" id="adminPurpose" placeholder="Purpose">
+      <input type="password" id="adminPass" placeholder="Admin Password">
+      <button onclick="adminWithdraw()">Admin Withdraw</button>
+    </div>
+
+    <div class="card">
+      <h3>Balances</h3>
+      <div id="balancesList" class="scrollable"></div>
+    </div>
+
+    <div class="card">
+      <h3>Transaction Logs</h3>
+      <div class="scrollable-table">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Name</th><th>Amount</th><th>Purpose</th><th>By</th><th>Date</th></tr>
+          </thead>
+          <tbody id="logsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Summary</h3>
+      <p>Total Collected: <span id="totalFunds">0</span></p>
+      <p>Total Expenses: <span id="totalExpenses">0</span></p>
+      <p>Remaining Funds: <span id="remainingFunds">0</span></p>
+    </div>
+  </div>
+
+  <script>
+    const URL = "https://script.google.com/macros/s/AKfycby563gs-5r43217rI9ib-3JL9bUKhhI3BO7QlhLtWb3rewxfkSOiCGG1s-oHoYbRCE/exec";
+
+    function login() {
+      const u = document.getElementById("username").value;
+      const p = document.getElementById("password").value;
+      if (u === "admin01" && p === "onlyadmin") {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        loadData();
+      } else {
+        alert("Incorrect username or password!");
+      }
+    }
+
+    function setAmount(val) {
+      document.getElementById("depositAmount").value = val;
+    }
+
+    async function addStudent() {
+      const name = document.getElementById("surnameInput").value.trim();
+      if (!name) return;
+      await fetch(`${URL}?action=addStudent&surname=${name}`);
+      document.getElementById("surnameInput").value = "";
+      loadData();
+    }
+
+    async function deposit() {
+      const name = document.getElementById("selectStudent").value;
+      const amt = Number(document.getElementById("depositAmount").value);
+      if (!name || !amt) return;
+      await fetch(`${URL}?action=addTransaction&type=Deposit&surname=${name}&amount=${amt}&purpose=Deposit&by=${name}`);
+      document.getElementById("depositAmount").value = "";
+      loadData();
+    }
+
+    async function studentWithdraw() {
+      const name = document.getElementById("withdrawStudent").value;
+      const amt = Number(document.getElementById("withdrawAmount").value);
+      const purp = document.getElementById("withdrawPurpose").value;
+      const pass = document.getElementById("withdrawPass").value;
+      if (pass !== "onlyadmin" || !name || !amt || !purp) return alert("Check inputs or password.");
+      await fetch(`${URL}?action=addTransaction&type=Withdraw&surname=${name}&amount=${amt}&purpose=${purp}&by=${name}`);
+      loadData();
+    }
+
+    async function adminWithdraw() {
+      const amt = Number(document.getElementById("adminWithdrawAmount").value);
+      const purp = document.getElementById("adminPurpose").value;
+      const pass = document.getElementById("adminPass").value;
+      if (pass !== "onlyadmin" || !amt || !purp) return alert("Check inputs or password.");
+      await fetch(`${URL}?action=addTransaction&type=Withdraw&surname=ADMIN&amount=${amt}&purpose=${purp}&by=ADMIN`);
+      loadData();
+    }
+
+    async function loadData() {
+      const res1 = await fetch(`${URL}?action=getData&sheetName=Students`);
+      const students = await res1.json();
+      const select = document.getElementById("selectStudent");
+      const wselect = document.getElementById("withdrawStudent");
+      const balancesDiv = document.getElementById("balancesList");
+      select.innerHTML = "";
+      wselect.innerHTML = "";
+      balancesDiv.innerHTML = "";
+
+      students.slice(1).forEach(row => {
+        const [name, balance] = row;
+        const opt = `<option value="${name}">${name}</option>`;
+        select.innerHTML += opt;
+        wselect.innerHTML += opt;
+        balancesDiv.innerHTML += `<div>${name}: ₱<input type="number" value="${balance}" onchange="editBalance('${name}', this.value)" /></div>`;
+      });
+
+      const res2 = await fetch(`${URL}?action=getData&sheetName=Transactions`);
+      const logs = await res2.json();
+      const logsTable = document.getElementById("logsTable");
+      logsTable.innerHTML = "";
+      logs.slice(1).reverse().forEach(row => {
+        logsTable.innerHTML += `<tr>${row.map(cell => `<td>${cell}</td>`).join("")}</tr>`;
+      });
+
+      const res3 = await fetch(`${URL}?action=getData&sheetName=Summary`);
+      const summary = await res3.json();
+      if (summary.length > 1) {
+        document.getElementById("totalFunds").textContent = summary[1][0];
+        document.getElementById("totalExpenses").textContent = summary[1][1];
+        document.getElementById("remainingFunds").textContent = summary[1][2];
+      }
+    }
+
+    async function editBalance(name, val) {
+      await fetch(`${URL}?action=editBalance&surname=${name}&amount=${val}`);
+      loadData();
+    }
+  </script>
+</body>
+</html>
