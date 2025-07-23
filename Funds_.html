@@ -5,28 +5,49 @@
   <title>Class Fund Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; margin: 0; padding: 20px; background: gray; }
+    body { 
+      font-family: sans-serif; 
+      margin: 0; 
+      padding: 20px; 
+      background: white;
+      display:flex;
+      flex-direction: column;
+      
+      
+      
+      
+    }
     h2 { 
       margin-top: 30px;
       text-align: center;
       color:midnightblue;
     }
+    h3{
+      display:flex;
+      align-items: center;
+      justify-content: center;
+    }
     .hidden { 
-      display: none; 
+      align-items: center;
+      display: none;
+      
+      flex-direction:column;
+      justify-content: center;
+      margin-left:10%;
+      margin-right:10%;
       
     }
     .card{ 
-      align-items: center;
+      align-items:center;
       background: beige;
-      margin-left:8%;
-      margin-right:8%;
+      max-width: 400px;
       padding: 30px; 
       border-radius: 10px; 
-      box-shadow: 0 0 800px darkgray;
-      justify-content:center;
-      margin:0;
+      box-shadow: 0 0 1000px black;
+      justify-content: center;
+      margin:10%;
       
-      
+    
       
     }
     input, select, button, textarea {
@@ -44,7 +65,7 @@
     }
     button:hover { 
       background-color: black;
-      animation-duration: 2s;
+      animation-duration: 5s;
       
       }
     .btn-small { width: auto; margin-right: 5px; }
@@ -69,14 +90,23 @@
       color: midnightblue;
     }
     .admin{
-     margin:0% 5%;
-     display:flex;
-      justify-content:center;
+     
+     margin-left:10%;
+     margin-right:10%;
+     display: flex;
+     justify-content: center;
+     
     }
+    
+    
     
   </style>
 </head>
-<body>
+<body style="
+display: flex;
+align-items: center;
+justify-content: center;
+">
   <!-- Login Page -->
   <div class="admin">
   <div id="loginPage" class="card">
@@ -91,6 +121,7 @@
 
   <!-- Main App -->
   <div id="mainApp" class="hidden">
+   
     <h3>Class Fund Tracker</h3>
 
     <div class="card">
@@ -152,6 +183,7 @@
       <p>Total Expenses: <span id="totalExpenses">0</span></p>
       <p>Remaining Funds: <span id="remainingFunds">0</span></p>
     </div>
+    
   </div>
 
   <script>
@@ -250,4 +282,4 @@
     }
   </script>
 </body>
-</html> 
+</html>
