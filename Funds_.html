@@ -9,7 +9,7 @@
       font-family: sans-serif; 
       margin: 0; 
       padding: 20px; 
-      background: white;
+      background: linear-gradient(to right,black,darkgreen,green,seagreen,lime,lime,seagreen,green,darkgreen,black);
       display:flex;
       flex-direction: column;
       
@@ -20,7 +20,8 @@
     h2 { 
       margin-top: 30px;
       text-align: center;
-      color:midnightblue;
+      color:black;
+      
     }
     h3{
       display:flex;
@@ -39,38 +40,39 @@
     }
     .card{ 
       align-items:center;
-      background: beige;
+      background: linear-gradient(to bottom,whitesmoke,beige,gray,black);
       max-width: 400px;
       padding: 30px; 
-      border-radius: 10px; 
+      border-radius: 50px; 
       box-shadow: 0 0 1000px black;
       justify-content: center;
-      margin:10%;
+      margin:5% 10%;
       
     
       
     }
     input, select, button, textarea {
       padding: 8px; margin: 5px 0; width: 100%;
-      box-sizing: border-box; border-radius: 5px; border: 2px solid darkblue;
+      box-sizing: border-box; border-radius: 5px; border: 2px solid beige;
       background-color: beige;
     }
     button { 
+      font-weight: bolder;
       background-color: dodgerblue; 
-      color: white; 
+      color: black; 
       border: 2px solid black; 
       cursor: pointer; 
       box-shadow: 0 0 5px black;
       
     }
     button:hover { 
-      background-color: black;
+      background-color: lawngreen;
       animation-duration: 5s;
       
       }
     .btn-small { width: auto; margin-right: 5px; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+    th, td { padding: 8px; border: 3px solid black; text-align: left; }
     .flex { display: flex; gap: 10px; }
 
     /* Scrollable Sections */
@@ -87,16 +89,52 @@
     }
     h1{
       text-align: center;
-      color: midnightblue;
+      color: black;
     }
     .admin{
      
-     margin-left:10%;
-     margin-right:10%;
+     max-width:700px;
      display: flex;
+     flex-direction: column;
      justify-content: center;
      
     }
+    .head{
+      background:rgba(255,255,255.0.3);
+      backdrop-filter: blur(50px);
+     -webkit-backdrop-filter: blur(50px);
+    border-radius: 40px;
+    padding:5px;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    }
+    #loginPage3{
+      font-weight: bolder;
+    }
+    #h3{
+      font-weight: bolder;
+      background: linear-gradient(to right,beige,white,black,black);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color:beige;
+      float:center;
+      display:flex;
+      margin-right:20px;
+    }
+    #logoutBtn {
+  font-size:20px;    
+  cursor: pointer;
+  color:dodgerblue;
+  font-weight: bold;
+  float: center;
+  margin-left: 20px;
+  background: linear-gradient(to bottom,dodgerblue,lightblue,dodgerblue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+}
     
     
     
@@ -110,20 +148,40 @@ justify-content: center;
   <!-- Login Page -->
   <div class="admin">
   <div id="loginPage" class="card">
-    <h1>Class Fund: IT41-A</h1>
+    <h1>Class Fund Tracker</h1>
     <h2>Admin Login</h2>
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
     <button onclick="login()">LOGIN</button>
 
+
   </div>
+      <div id="loginPage2"class="card">
+      <h3>Transaction Logs</h3>
+      <div class="scrollable-table">
+        <table>
+          <thead>
+            <tr><th>Type</th><th>Name</th><th>Amount</th><th>Purpose</th><th>By</th><th>Date</th></tr>
+          </thead>
+          <tbody id="logsTable"></tbody>
+        </table>
+      </div>
+    </div>
+     <div id="loginPage3"class="card">
+   <h3>Summary</h3>
+   <p>Total Collected: <span id="totalFunds">0</span></p>
+   <p>Total Expenses: <span id="totalExpenses">0</span></p>
+   <p>Remaining Funds: <span id="remainingFunds">0</span></p>
+ </div>
   </div>
 
   <!-- Main App -->
   <div id="mainApp" class="hidden">
-   
-    <h3>Class Fund Tracker</h3>
+    <div class="head">
 
+    <h3 id="h3">Class Fund Tracker</h3>
+    <span id="logoutBtn" onclick="Logout()">Logout</span>
+    </div>
     <div class="card">
       <h3>Add Student</h3>
       <input type="text" id="surnameInput" placeholder="Enter Surname">
@@ -165,41 +223,36 @@ justify-content: center;
       <div id="balancesList" class="scrollable"></div>
     </div>
 
-    <div class="card">
-      <h3>Transaction Logs</h3>
-      <div class="scrollable-table">
-        <table>
-          <thead>
-            <tr><th>Type</th><th>Name</th><th>Amount</th><th>Purpose</th><th>By</th><th>Date</th></tr>
-          </thead>
-          <tbody id="logsTable"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Summary</h3>
-      <p>Total Collected: <span id="totalFunds">0</span></p>
-      <p>Total Expenses: <span id="totalExpenses">0</span></p>
-      <p>Remaining Funds: <span id="remainingFunds">0</span></p>
-    </div>
-    
+  
   </div>
 
   <script>
+  
+  
     const URL = "https://script.google.com/macros/s/AKfycby563gs-5r43217rI9ib-3JL9bUKhhI3BO7QlhLtWb3rewxfkSOiCGG1s-oHoYbRCE/exec";
-
+    
+loadData()
     function login() {
       const u = document.getElementById("username").value;
       const p = document.getElementById("password").value;
-      if (u === "admin01" && p === "onlyadmin") {
+      if (u === "admin01" && p === "onlyadmin"||u==="admin02"&& p==="onlyadmin") {
         document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("loginPage2").classList.add("hidden");
+        document.getElementById("loginPage3").classList.add("hidden");
         document.getElementById("mainApp").classList.remove("hidden");
         loadData();
       } else {
         alert("Incorrect username or password!");
       }
     }
+    
+    function Logout() {
+  document.getElementById("mainApp").classList.add("hidden");
+  document.getElementById("loginPage").classList.remove("hidden");
+  document.getElementById("loginPage2").classList.remove("hidden");
+document.getElementById("loginPage3").classList.remove("hidden");
+  loadData(); 
+}
 
     function setAmount(val) {
       document.getElementById("depositAmount").value = val;
