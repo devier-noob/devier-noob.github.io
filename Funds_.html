@@ -233,9 +233,14 @@ justify-content: center;
     
 loadData()
     function login() {
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
-      if (u === "admin01" && p === "onlyadmin"||u==="admin02"&& p==="onlyadmin") {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+
+  fetch(URL + `?username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        // Login success: hide login, show app
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("loginPage2").classList.add("hidden");
         document.getElementById("loginPage3").classList.add("hidden");
@@ -244,6 +249,7 @@ loadData()
       } else {
         alert("Incorrect username or password!");
       }
+    });
     }
     
     function Logout() {
