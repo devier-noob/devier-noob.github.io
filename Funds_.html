@@ -229,22 +229,27 @@ justify-content: center;
   <script>
   
   
-    const URL = "https://script.google.com/macros/s/AKfycbwi3mKF3UM6kdZvzzLDPn8yjmE3pgJX-HVkk8e58Yaqe-Vr5pr7n9QqLKWKvv19oVY/exec";
+    const URL = "https://script.google.com/macros/s/AKfycby-224EWgBG8bnZkuy8pVrx2cWLSzSb7HKCUJlsBT2OBoQRFLm-0K9gUkRP8TA0mvs/exec";
     
 loadData()
-    function login() {
-      const u = document.getElementById("username").value;
-      const p = document.getElementById("password").value;
-      if (u === "admin01" && p === "onlyadmin"||u==="admin02"&& p==="onlyadmin") {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("loginPage2").classList.add("hidden");
-        document.getElementById("loginPage3").classList.add("hidden");
-        document.getElementById("mainApp").classList.remove("hidden");
-        loadData();
-      } else {
-        alert("Incorrect username or password!");
-      }
-    }
+    async function login() {
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value.trim();
+
+  const res = await fetch(`${URL}?username=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`);
+  const data = await res.json();
+
+  if (data.success) {
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("loginPage2").classList.add("hidden");
+    document.getElementById("loginPage3").classList.add("hidden");
+    document.getElementById("mainApp").classList.remove("hidden");
+    loadData();
+  } else {
+    alert("Incorrect username or password!");
+  }
+}
+
     
     function Logout() {
   document.getElementById("mainApp").classList.add("hidden");
